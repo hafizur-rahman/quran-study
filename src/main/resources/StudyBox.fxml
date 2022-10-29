@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.jdreamer.studybox.ui.StudyBoxController"
+            prefHeight="780.0" prefWidth="1200.0">
+   <right>
+      <BorderPane>
+         <top>
+            <VBox>
+               <Label text=""/>
+               <ImageView fx:id="hadith" fitWidth="300" fitHeight="120"/>
+            </VBox>
+         </top>
+         <center>
+            <BorderPane>
+               <top>
+                  <HBox alignment="CENTER">
+                     <MediaView fx:id="mediaView" fitWidth="300" fitHeight="180" style="-fx-background-color: cornsilk;"/>
+                  </HBox>
+               </top>
+               <center>
+                  <Button fx:id="playButton" text=">" />
+               </center>
+               <bottom>
+                  <VBox>
+                     <HBox>
+                        <Label text="  " />
+                        <Label text="Time: " />
+                        <Slider fx:id="timeSlider" minWidth="50" />
+                        <Label fx:id="playTime" text="0:00/0:00" prefWidth="110" minWidth="50" />
+
+                     </HBox>
+                     <HBox>
+                        <Label text="  " />
+                        <Label text=" Vol:   " />
+                        <Slider fx:id="volumeSlider" />
+                        <Label text="  " />
+                     </HBox>
+                  </VBox>
+               </bottom>
+            </BorderPane>
+         </center>
+         <bottom>
+            <VBox>
+               <Label text="  " />
+               <TreeView fx:id="studyItemsTree"/>
+            </VBox>
+         </bottom>
+      </BorderPane>
+   </right>
+   <center>
+      <BorderPane>
+         <left>
+
+         </left>
+         <top>
+
+         </top>
+         <center>
+            <TabPane>
+               <Tab fx:id="lugatulQuranTab1" text="লুগাতুল কুরআন ১" closable="false">
+                  <Pagination fx:id="lugatulQuranNav1" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="lugatulQuranTab2" text="লুগাতুল কুরআন ২" closable="false">
+                  <Pagination fx:id="lugatulQuranNav2" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainArabicTab" text="Tafsir Jalalain (Arabic)" closable="false">
+                  <Pagination fx:id="jalalainArabicNav" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab1" text="জালালাইন ১" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav1" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab2" text="জালালাইন ২" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav2" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab3" text="জালালাইন ৩" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav3" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab4" text="জালালাইন ৪" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav4" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab5" text="জালালাইন ৫" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav5" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab6" text="জালালাইন ৬" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav6" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+               <Tab fx:id="jalalainBengaliTab7" text="জালালাইন ৭" closable="false">
+                  <Pagination fx:id="jalalainBengaliNav7" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </Tab>
+            </TabPane>
+         </center>
+      </BorderPane>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER">
+         <Label alignment="CENTER" text=" "/>
+      </HBox>
+   </bottom>
+</BorderPane>
