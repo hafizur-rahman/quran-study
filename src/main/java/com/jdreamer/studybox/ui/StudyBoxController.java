@@ -10,6 +10,8 @@ import com.jdreamer.studybox.dao.StudyItemRepository;
 import com.jdreamer.studybox.dao.StudyItemRepositoryImpl;
 import com.jdreamer.studybox.model.StudyItem;
 import com.jdreamer.studybox.pdf.PdfModel;
+import com.jdreamer.studybox.util.BookViewNavigation;
+import com.jdreamer.studybox.util.GroupedTabs;
 import com.opencsv.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -26,7 +28,6 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -146,10 +147,9 @@ public class StudyBoxController {
     public void initialize() {
         Image hadithImage = new Image(getClass().getClassLoader().getResourceAsStream("hadith.png"));
 
-        checkedIcon = new Image(getClass().getClassLoader().getResourceAsStream("checked.png"));
         uncheckedIcon = new Image(getClass().getClassLoader().getResourceAsStream("unchecked.png"));
 
-        Image downloadIcon = new Image(getClass().getClassLoader().getResourceAsStream("download.png"));
+//        Image downloadIcon = new Image(getClass().getClassLoader().getResourceAsStream("download.png"));
 
         mediaView.setFitHeight(180);
         mediaView.setFitWidth(250);
@@ -209,7 +209,8 @@ public class StudyBoxController {
                         new Tab[]{lugatulQuranTab1, lugatulQuranTab2},
                         new Pagination[]{lugatulQuranNav1, lugatulQuranNav2},
                         new String[]{"books/Lugatul Quran 01.pdf", "books/Lugatul Quran 02.pdf"}),
-                new GroupedTabs(new Tab[]{jalalainArabicTab},
+                new GroupedTabs(
+                        new Tab[]{jalalainArabicTab},
                         new Pagination[]{jalalainArabicNav},
                         new String[]{"books/Tafsir Jalalain.pdf"}),
                 new GroupedTabs(
@@ -230,142 +231,8 @@ public class StudyBoxController {
         );
     }
 
-    private static class BookIndex {
-        int bookIndex;
-        Range<Integer> pageRange;
-
-        public BookIndex(int bookIndex, Range<Integer> pageRange) {
-            this.bookIndex = bookIndex;
-            this.pageRange = pageRange;
-        }
-    }
-
-    private static class NavIndex {
-        int chapter;
-        Range<Integer> verseRange;
-        BookIndex lugatulQuran;
-        BookIndex jalalainArabic;
-        BookIndex jalalainBengali;
-
-        public NavIndex(int chapter, Range<Integer> verseRange, BookIndex lugatulQuran,
-                        BookIndex jalalainArabic, BookIndex jalalainBengali) {
-            this.chapter = chapter;
-            this.verseRange = verseRange;
-            this.lugatulQuran = lugatulQuran;
-            this.jalalainArabic = jalalainArabic;
-            this.jalalainBengali = jalalainBengali;
-        }
-    }
-
-    private class GroupedTabs {
-        Pagination[] paginations;
-        Tab[] tabs;
-        String[] files;
-
-        public GroupedTabs(Tab[] tabs, Pagination[] paginations, String[] files) {
-            this.tabs = tabs;
-            this.paginations = paginations;
-            this.files = files;
-
-            initialize();
-        }
-
-        public void initialize() {
-            for (int i = 0; i < paginations.length; i++) {
-                new BookView(files[i], paginations[i]);
-            }
-        }
-
-        public void syncView(int tabIndex, int pageIndex, boolean hide) {
-            for (int i = 0; i < paginations.length; i++) {
-                if (tabIndex == i) {
-                    paginations[i].setCurrentPageIndex(pageIndex);
-                    tabs[i].setGraphic(new ImageView(checkedIcon));
-                } else {
-                    if (hide) {
-                        tabs[i].setGraphic(null);
-                    }
-                }
-            }
-        }
-    }
-
-    private class BookViewNavigation {
-        private GroupedTabs lugatualQuran;
-        private GroupedTabs jalalainArabic;
-        private GroupedTabs jalalainBengali;
-
-        public BookViewNavigation(GroupedTabs lugatualQuran, GroupedTabs jalalainArabic, GroupedTabs jalalainBengali) {
-            this.lugatualQuran = lugatualQuran;
-            this.jalalainArabic = jalalainArabic;
-            this.jalalainBengali = jalalainBengali;
-        }
-
-        public void syncBookViews(int chapter, int verseNo, boolean hide) {
-            NavIndex[] bookIndices = {
-                    new NavIndex(2, Range.between(1, 5),
-                            new BookIndex(0, Range.between(1, 30)),
-                            new BookIndex(0, Range.between(1, 30)),
-                            new BookIndex(0, Range.between(1, 30))),
-                    new NavIndex(2, Range.between(6, 10),
-                            new BookIndex(0, Range.between(30, 40)),
-                            new BookIndex(0, Range.between(30, 40)),
-                            new BookIndex(0, Range.between(30, 40))),
-                    new NavIndex(2, Range.between(75, 79),
-                            new BookIndex(0, Range.between(63, 64)),
-                            new BookIndex(0, Range.between(10, 10)),
-                            new BookIndex(0, Range.between(213, 220))),
-                    new NavIndex(2, Range.between(80, 85),
-                            new BookIndex(0, Range.between(64, 66)),
-                            new BookIndex(0, Range.between(11, 12)),
-                            new BookIndex(0, Range.between(221, 233))),
-            };
-            Arrays.stream(bookIndices).filter(index -> index.chapter == chapter && index.verseRange.contains(verseNo))
-                    .findFirst()
-                    .ifPresent(index -> {
-                        // Hide unused tabs
-
-                        // Navigate to starting of relevant page
-                        lugatualQuran.syncView(index.lugatulQuran.bookIndex, index.lugatulQuran.pageRange.getMinimum(), hide);
-                        jalalainArabic.syncView(index.jalalainArabic.bookIndex, index.jalalainArabic.pageRange.getMinimum(), hide);
-                        jalalainBengali.syncView(index.jalalainBengali.bookIndex, index.jalalainBengali.pageRange.getMinimum(), hide);
-                    });
 
 
-        }
-    }
-
-
-    private static class BookView {
-        private String filePath;
-        private Pagination pagination;
-        private PdfModel model;
-
-        public BookView(String filePath, Pagination pagination) {
-            this.filePath = filePath;
-            this.pagination = pagination;
-
-            initialize();
-        }
-
-        private void initialize() {
-            model = new PdfModel(Paths.get(filePath));
-
-            pagination.setPageCount(model.numPages());
-            pagination.setPageFactory(index -> {
-                ImageView view = new ImageView(model.getImage(index));
-                view.setFitHeight(1600);
-                view.setFitWidth(1200);
-
-                ScrollPane scroll = new ScrollPane();
-                scroll.setPrefHeight(1600);
-                scroll.setPrefWidth(1200);
-                scroll.setContent(view);
-
-                return scroll;
-            });
-        }
-    }
 
     private void handleMouseClicked(MouseEvent event) {
         Node node = event.getPickResult().getIntersectedNode();
