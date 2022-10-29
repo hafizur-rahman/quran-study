@@ -23,6 +23,12 @@ public class StudyItem implements Serializable {
 
     private SimpleStringProperty localMediaLocation = new SimpleStringProperty();
 
+    private int chapterNo;
+
+    private int verseStart;
+
+    private int verseEnd;
+
     private boolean isViewed;
 
     public StudyItem() {
@@ -92,6 +98,33 @@ public class StudyItem implements Serializable {
 
     public void setViewed(boolean viewed) {
         isViewed = viewed;
+    }
+
+    @Column(name = "VERSE_START", nullable = false)
+    public int getVerseStart() {
+        return verseStart;
+    }
+
+    @Column(name = "CHAPTER_NO", nullable = false)
+    public int getChapterNo() {
+        return chapterNo;
+    }
+
+    public void setChapterNo(int chapterNo) {
+        this.chapterNo = chapterNo;
+    }
+
+    public void setVerseStart(int verseStart) {
+        this.verseStart = verseStart;
+    }
+
+    @Column(name = "VERSE_END", nullable = false)
+    public int getVerseEnd() {
+        return verseEnd;
+    }
+
+    public void setVerseEnd(int verseEnd) {
+        this.verseEnd = verseEnd;
     }
 
     @Override

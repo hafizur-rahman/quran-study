@@ -27,6 +27,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Range;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -200,7 +201,6 @@ public class StudyBoxController {
         hadith.setImage(hadithImage);
 
         bookViewNavigation = initializeBookViews();
-        bookViewNavigation.syncBookViews(2, 77, true);
     }
 
     private BookViewNavigation initializeBookViews() {
@@ -208,20 +208,20 @@ public class StudyBoxController {
                 new GroupedTabs(
                         new Tab[]{lugatulQuranTab1, lugatulQuranTab2},
                         new Pagination[]{lugatulQuranNav1, lugatulQuranNav2},
-                        new String[] { "books/Lugatul Quran 01.pdf", "books/Lugatul Quran 02.pdf"}),
+                        new String[]{"books/Lugatul Quran 01.pdf", "books/Lugatul Quran 02.pdf"}),
                 new GroupedTabs(new Tab[]{jalalainArabicTab},
                         new Pagination[]{jalalainArabicNav},
-                        new String[] { "books/Tafsir Jalalain.pdf"}),
+                        new String[]{"books/Tafsir Jalalain.pdf"}),
                 new GroupedTabs(
                         new Tab[]{
-                            jalalainBengaliTab1, jalalainBengaliTab2, jalalainBengaliTab3, jalalainBengaliTab4,
+                                jalalainBengaliTab1, jalalainBengaliTab2, jalalainBengaliTab3, jalalainBengaliTab4,
                                 jalalainBengaliTab5, jalalainBengaliTab6, jalalainBengaliTab7
                         },
                         new Pagination[]{
                                 jalalainBengaliNav1, jalalainBengaliNav2, jalalainBengaliNav3, jalalainBengaliNav4,
                                 jalalainBengaliNav5, jalalainBengaliNav6, jalalainBengaliNav7
                         },
-                        new String[] {
+                        new String[]{
                                 "books/JalalainBangla01.pdf", "books/JalalainBangla02.pdf",
                                 "books/JalalainBangla03.pdf", "books/JalalainBangla04.pdf",
                                 "books/JalalainBangla05.pdf", "books/JalalainBangla06.pdf",
@@ -230,7 +230,7 @@ public class StudyBoxController {
         );
     }
 
-    private class BookIndex {
+    private static class BookIndex {
         int bookIndex;
         Range<Integer> pageRange;
 
@@ -240,7 +240,7 @@ public class StudyBoxController {
         }
     }
 
-    private class NavIndex {
+    private static class NavIndex {
         int chapter;
         Range<Integer> verseRange;
         BookIndex lugatulQuran;
@@ -257,7 +257,7 @@ public class StudyBoxController {
         }
     }
 
-    class GroupedTabs {
+    private class GroupedTabs {
         Pagination[] paginations;
         Tab[] tabs;
         String[] files;
@@ -290,7 +290,7 @@ public class StudyBoxController {
         }
     }
 
-    class BookViewNavigation {
+    private class BookViewNavigation {
         private GroupedTabs lugatualQuran;
         private GroupedTabs jalalainArabic;
         private GroupedTabs jalalainBengali;
@@ -315,6 +315,10 @@ public class StudyBoxController {
                             new BookIndex(0, Range.between(63, 64)),
                             new BookIndex(0, Range.between(10, 10)),
                             new BookIndex(0, Range.between(213, 220))),
+                    new NavIndex(2, Range.between(80, 85),
+                            new BookIndex(0, Range.between(64, 66)),
+                            new BookIndex(0, Range.between(11, 12)),
+                            new BookIndex(0, Range.between(221, 233))),
             };
             Arrays.stream(bookIndices).filter(index -> index.chapter == chapter && index.verseRange.contains(verseNo))
                     .findFirst()
@@ -332,7 +336,7 @@ public class StudyBoxController {
     }
 
 
-    private class BookView {
+    private static class BookView {
         private String filePath;
         private Pagination pagination;
         private PdfModel model;
@@ -378,6 +382,10 @@ public class StudyBoxController {
                     currentTreeItem = selectedItem;
 
                     StudyItem currentStudyItem = (StudyItem) currentTreeItem.getValue();
+                    if (currentStudyItem.getVerseEnd() > 0) {
+                        bookViewNavigation.syncBookViews(currentStudyItem.getChapterNo(),
+                                currentStudyItem.getVerseStart(), true);
+                    }
 
                     String videoId = studyItem.getMediaLocation().replace(YOUTUBE_VIDEO_URL_PREFIX, "");
 
@@ -567,6 +575,15 @@ public class StudyBoxController {
                 }
                 if (row.length > 4) {
                     item.setViewed(Boolean.parseBoolean(row[4]));
+                }
+                if (row.length > 5 && StringUtils.isNotBlank(row[5])) {
+                    item.setChapterNo(Integer.parseInt(row[5]));
+                }
+                if (row.length > 6 && StringUtils.isNotBlank(row[6])) {
+                    item.setVerseStart(Integer.parseInt(row[6]));
+                }
+                if (row.length > 7 && StringUtils.isNotBlank(row[7])) {
+                    item.setVerseEnd(Integer.parseInt(row[7]));
                 }
                 list.add(item);
             }
